@@ -267,9 +267,14 @@
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+          <compilerArgs>
+            <!-- 过期方法警告 -->
+            <arg>-Xlint:deprecation</arg>
+          </compilerArgs>
           <encoding>UTF-8</encoding>
           <compilerArguments>
-            <extdirs>${project.basedir}/src/main/webapp/WEB-INF/lib</extdirs>
+<!--            <extdirs>${project.basedir}/src/main/webapp/WEB-INF/lib</extdirs>-->
+            <bootclasspath>${java.home}\lib\rt.jar;${java.home}\lib\jce.jar</bootclasspath>
           </compilerArguments>
         </configuration>
       </plugin>

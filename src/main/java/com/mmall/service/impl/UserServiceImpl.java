@@ -1,6 +1,7 @@
 package com.mmall.service.impl;
 
 import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.common.TokenCache;
 import com.mmall.dao.UserMapper;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpSession;
 import java.util.UUID;
 
 @Service("iUserService")
@@ -168,5 +170,13 @@ public class UserServiceImpl implements IUserService {
         return ServerResponse.createByErrorMessage("更新个人信息失败");
     }
 
+    public ServerResponse<User> getInformation(Integer userId){
+        User user = userMapper.selectByPrimaryKey(userId);
+        if (user == null) {
+            return ServerResponse.createByErrorMessage("找不到当前用户！");
+        }
+        user.setPassword(StringUtils.EMPTY);
+        return ServerResponse.createBySuccess(user);
 
+    }
 }

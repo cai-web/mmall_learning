@@ -1,12 +1,10 @@
 package com.mmall.controller.portal;
 
 import com.mmall.common.Const;
+import com.mmall.common.ResponseCode;
 import com.mmall.common.ServerResponse;
 import com.mmall.pojo.User;
 import com.mmall.service.IUserService;
-import com.sun.xml.internal.ws.server.ServerRtException;
-import net.sf.jsqlparser.schema.Server;
-import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 
 @Controller
-@RequestMapping("/user/")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -41,26 +39,26 @@ public class UserController {
         return response;
     }
 
-    @RequestMapping(value = "logout.do", method = RequestMethod.GET)
+    @RequestMapping(value = "logout.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> logout(HttpSession session) {
         session.removeAttribute(Const.CURRENT_USER);
         return ServerResponse.createBySuccess();
     }
 
-    @RequestMapping(value = "register.do", method = RequestMethod.GET)
+    @RequestMapping(value = "register.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> register(User user) {
         return iUserService.register(user);
     }
 
-    @RequestMapping(value = "check_valid.do", method = RequestMethod.GET)
+    @RequestMapping(value = "check_valid.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> checkValid(String str, String type) {
         return iUserService.checkValid(str, type);
     }
 
-    @RequestMapping(value = "get_user_info.do", method = RequestMethod.GET)
+    @RequestMapping(value = "get_user_info.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<User> getUserInfo(HttpSession session) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -71,25 +69,25 @@ public class UserController {
         return ServerResponse.createByErrorMessage("用户未登录，无法获取当前的用户信息！");
     }
 
-    @RequestMapping(value = "forget_get_question.do", method = RequestMethod.GET)
+    @RequestMapping(value = "forget_get_question.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetGetQuestion(String username) {
         return iUserService.selectQueation(username);
     }
 
-    @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.GET)
+    @RequestMapping(value = "forget_check_answer.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetCheckAnswer(String username, String question, String answer) {
         return iUserService.checkAnswer(username, question, answer);
     }
 
-    @RequestMapping(value = "forget_forget_password.do", method = RequestMethod.GET)
+    @RequestMapping(value = "forget_forget_password.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> forgetRestPassword(String username, String passwordNew, String forgetToken) {
         return iUserService.forgetResetPassword(username, passwordNew, forgetToken);
     }
 
-    @RequestMapping(value = "reset_password.do", method = RequestMethod.GET)
+    @RequestMapping(value = "reset_password.do", method = RequestMethod.POST)
     @ResponseBody
     public ServerResponse<String> resetPassword(HttpSession session, String passwordOld, String passwordNew) {
         User user = (User) session.getAttribute(Const.CURRENT_USER);
@@ -118,7 +116,15 @@ public class UserController {
         return response;
     }
 
-
+    @RequestMapping(value = "get_information.do",method = RequestMethod.POST)
+    @ResponseBody
+    public ServerResponse<User> get_information(HttpSession session) {
+        User currentUser = (User) session.getAttribute(Const.CURRENT_USER);
+        if (currentUser == null) {
+            return ServerResponse.createByErrorCodeMessage(ResponseCode.NEED_LOGIN.getCode(), "未登录时需要强制登录status=10");
+        }
+        return iUserService.getInformation(currentUser.getId());
+    }
 
 
 
