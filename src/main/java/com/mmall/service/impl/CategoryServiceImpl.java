@@ -53,6 +53,6 @@ public class CategoryServiceImpl {
 
     public ServerResponse<List<Category>> getChildrenParallelCategory(Integer categoryId) {
         List<Category> categoryList = categoryMapper.selectCategoryChildrenByParentId(categoryId);
-
+        return null;
     }
 }
