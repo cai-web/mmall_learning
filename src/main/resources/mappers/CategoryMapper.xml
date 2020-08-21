@@ -121,6 +121,6 @@
     select
     <include refid="Base_Column_List"></include>
     from mmall_category
-    where parent_id = #{id}
+    where parent_id = #{parentId}
   </select>
 </mapper>
