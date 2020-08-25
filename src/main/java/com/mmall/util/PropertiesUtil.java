@@ -31,7 +31,7 @@ public class PropertiesUtil {
         String value = props.getProperty(key.trim());
         if(StringUtils.isBlank(value)){
             return null;
-        }
+    }
         return value.trim();
     }
 
